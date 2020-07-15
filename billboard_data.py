@@ -59,16 +59,14 @@ scraped_day, df = scrape_week_chart(day)
 if scraped_day:
     # remove scraped day from csv
     dates = pd.read_csv('Billboard/dates.csv')
-    dates = dates.drop(labels=day)
-    print(dates)
-    #dates.drop_duplicates(keep=False, inplace=True)
-    #dates.to_csv('Billboard/dates.csv', index=False)
-'''
+    dates = dates[(dates != day).all(1)]
+    dates.to_csv('Billboard/dates.csv', index=False)
+
     # append the scraped dataframe to the existing
     billboard_df = pd.read_csv('Billboard/billboards.csv',index_col='Top')
     billboard_df.append(df)
     billboard_df.to_csv('Billboard/billboards.csv', index='Top')
-'''
+
     #debug: create a new dataframe
     #df.to_csv('Billboard/billboards.csv', index=False)
 
