@@ -3,6 +3,7 @@ import requests
 import pandas as pd
 from bs4 import BeautifulSoup
 import os.path
+import time
 
 # web scraping and cleaning the billboard historical data
 
@@ -57,7 +58,7 @@ def write_week_chart_to_file():
 
     dates = pd.read_csv('Billboard/dates.csv')
     day = dates.values[0][0]
-
+ 
     try:    
         scraped_day, df = scrape_week_chart(day)
         print('scraped_day: ',scraped_day)
@@ -85,10 +86,12 @@ def write_week_chart_to_file():
                 billboard_df.to_csv('Billboard/billboards.csv',index=False)
             
     except:
+
         print('Scrapping failed')
 
 
-for i in range(100):
+for i in range(500):
     write_week_chart_to_file()
+    time.sleep(2)
 
 
