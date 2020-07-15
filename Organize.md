@@ -9,14 +9,14 @@ Analyse how the songs variables have changed over time
 TO DO:
 
 Spotify Data:
-    Save the file
-    Read to spotify_data.py
-    Clean it if needed
-    Return a Dataframe
+    Save the file - done
+    Read to spotify_data.py - done
+    Clean it if needed - done
+    Return a Dataframe - done
 
 Billboard Data:
-    Webscrape the data and save it to a file (may require several times)
-    Read from file
+    Webscrape the data and save it to a file (may require several times) - done
+    Read from file - done
     Clean if needed
     Aggregate the data by year (maybe by decade)
     Return a DataFrame

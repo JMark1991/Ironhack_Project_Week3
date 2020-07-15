@@ -63,10 +63,6 @@ def write_week_chart_to_file():
         print('scraped_day: ',scraped_day)
 
         if scraped_day:
-            # remove scraped day from csv
-            dates = dates[(dates != day).all(1)]
-            dates.to_csv('Billboard/dates.csv', index=False)
-
             # check if file exists
             if not os.path.isfile('Billboard/billboards.csv'):
                 
@@ -84,14 +80,26 @@ def write_week_chart_to_file():
 
                 billboard_df.to_csv('Billboard/billboards.csv',index=False)
             
-    except:
+            # remove scraped day from csv
+            dates = dates[(dates != day).all(1)]
+            dates.to_csv('Billboard/dates.csv', index=False)
 
+    except:
         print('Scrapping failed')
         time.sleep(10)
 
 
-for i in range(10):
+def double_check_dates():
+    # billboard
+    billboard_df = pd.read_csv('Billboard/billboards.csv')
+    bill_dates = billboard_df['Date'].unique()
+
+    # dates
+    dates_df = pd.read_csv('Billboard/dates.csv')
+    date_list = dates_df['0'].append(pd.Series(bill_dates)).drop_duplicates(keep=False).dropna()
+    date_list.to_csv('Billboard/dates.csv', index=False)
+
+
+
+for i in range(200):
     write_week_chart_to_file()
-    
-
-
