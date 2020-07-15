@@ -38,9 +38,9 @@ def scrape_week_chart(chart_date):
     
     song_name = soup.find_all('span', {'chart-element__information__song text--truncate color--primary'})
     artist_name = soup.find_all('span', {'class': 'chart-element__information__artist text--truncate color--secondary'})
-
     top100_dict = []
-    for n in range(100):
+    for n in range(len(artist_name)):
+
         top100_dict.append(
             {'id':n,
             'Top':n+1,
@@ -48,7 +48,6 @@ def scrape_week_chart(chart_date):
             'Artist_Name':artist_name[n].get_text(),
             'Date': chart_date
             })
-
     return chart_date, pd.DataFrame(top100_dict)
 
 
@@ -88,10 +87,11 @@ def write_week_chart_to_file():
     except:
 
         print('Scrapping failed')
+        time.sleep(10)
 
 
-for i in range(500):
+for i in range(10):
     write_week_chart_to_file()
-    time.sleep(2)
+    
 
 
