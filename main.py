@@ -1,7 +1,8 @@
 
 import pandas as pd
 import re
-
+import seaborn as sns
+import matplotlib.pyplot as plt
 
 
 def clean_spotify_data(): 
@@ -119,7 +120,7 @@ weighted_avg = pd.DataFrame()
 important_variables = ['acousticness','danceability', 'energy', 'valence', 'explicit']
 #variables = ['acousticness','danceability', 'energy', 'instrumentalness', 'liveness', 'loudness', 'popularity', 'speechiness', 'tempo', 'valence','explicit']
 for variable in important_variables:
-    weighted_avg[variable] = ultimate_df.groupby('Decade').apply(wavg, variable, 'Popularity_Score') 
+    weighted_avg[variable] = ultimate_df.groupby('Year').apply(wavg, variable, 'Popularity_Score') 
     #max_val[variable] = ultimate_df.groupby('Decade')[variable].max()
     #min_val[variable] = ultimate_df.groupby('Decade')[variable].min()
 
@@ -127,6 +128,10 @@ print(weighted_avg)
 #print(max_val)
 #print(min_val)
 
+sns.set()
+data = sns.load_dataset("tips")
+ax = sns.lineplot(data=weighted_avg)
+plt.show()
 
 # group by year and song to get the popularity scores per year
 yearly_scores = billboard_df.groupby(['Year','temp_song_ID','Song_Name','Artist_Name'])['Popularity_Score'].sum()
