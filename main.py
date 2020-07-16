@@ -77,24 +77,63 @@ billboard_df = billboard_df.merge(music_artist_df,how='left',on=['Song_Name','Ar
 # Update the music_artist_df with the spotify song ids
 music_artist_df = find_spotify_id(music_artist_df,spotify_df)
 
-# Merge dataframes
-####### Work in progress
-print(music_artist_df)
-
-
-# Data Analysis
 
 # create a Popularity_score based on the positions on the top
 billboard_df['Popularity_Score'] = 101-billboard_df['Top']
 
-# create a 'Year' column
+# create a 'Year' and 'Decade' columns
 billboard_df['Year'] = billboard_df['Date'].apply(lambda dt : dt[0:4])
+billboard_df['Decade'] = billboard_df['Date'].apply(lambda dt : dt[0:3] + '0')
+
+
+#print column names
+#print("\nbillboard:\n",billboard_df.columns,"\nmusic_artist:\n",music_artist_df.columns,"\nspotify:\n",spotify_df.columns)
+
+
+# Merge dataframes
+ultimate_df = music_artist_df[['id','Song_Name','Primary_Artist', 'temp_song_ID']]
+ultimate_df = ultimate_df.merge(billboard_df[['temp_song_ID','Date','Year','Decade','Popularity_Score']], how='left',on='temp_song_ID')
+ultimate_df = ultimate_df.merge(spotify_df[['id', 'acousticness', 'danceability', 'energy', 'explicit', 'instrumentalness', 'liveness', 'loudness',
+                                            'popularity', 'speechiness', 'tempo', 'valence']], how='left', on='id')
+
+ultimate_df['acousticness'] = pd.to_numeric(ultimate_df['acousticness']).astype(float)
+
+
+def wavg(group, avg_name, weight_name):
+    """ http://stackoverflow.com/questions/10951341/pandas-dataframe-aggregate-function-using-multiple-columns
+    In rare instance, we may not have weights, so just return the mean. Customize this if your business case
+    should return otherwise.
+    """
+    d = group[avg_name]
+    w = group[weight_name]
+    try:
+        return (d * w).sum() / w.sum()
+    except ZeroDivisionError:
+        return d.mean()
+
+
+# Weighted averages per year of the variables: missing 'acousticness', 
+weighted_avg = pd.DataFrame()
+#max_val = pd.DataFrame()
+#min_val = pd.DataFrame()
+important_variables = ['acousticness','danceability', 'energy', 'valence', 'explicit']
+#variables = ['acousticness','danceability', 'energy', 'instrumentalness', 'liveness', 'loudness', 'popularity', 'speechiness', 'tempo', 'valence','explicit']
+for variable in important_variables:
+    weighted_avg[variable] = ultimate_df.groupby('Decade').apply(wavg, variable, 'Popularity_Score') 
+    #max_val[variable] = ultimate_df.groupby('Decade')[variable].max()
+    #min_val[variable] = ultimate_df.groupby('Decade')[variable].min()
+
+print(weighted_avg)
+#print(max_val)
+#print(min_val)
+
 
 # group by year and song to get the popularity scores per year
 yearly_scores = billboard_df.groupby(['Year','temp_song_ID','Song_Name','Artist_Name'])['Popularity_Score'].sum()
-# agr
+decade_scores = billboard_df.groupby(['Decade','temp_song_ID','Song_Name','Artist_Name'])['Popularity_Score'].sum()
 
-
+#print(yearly_scores.sort_values(ascending=False).head(20))
+#decade_tops = billboard_df.groupby(['Decade','temp_song_ID','Song_Name','Artist_Name']).apply(lambda x: x.nlargest(5,['Popularity_Score'])).reset_index(drop=True)
 
 
 # try to match song names and song_IDs
