@@ -49,8 +49,8 @@ music_artist_df['Artist_List'] = music_artist_df['Artist_Name'].str.split(rules)
 def find_spotify_id(music_artist_df,spotify_df):
     # Match song names not duplicated
     remove_song_dup_df = music_artist_df.drop_duplicates(['Song_Name'])
-    remove_song_dup_df= remove_song_dup_df.merge(spotify_df[['name','id']], how='inner', left_on='Song_Name', right_on='name')
-    music_artist_df= music_artist_df.merge(remove_song_dup_df[['temp_song_ID','id']], how='left', on= 'temp_song_ID')
+    remove_song_dup_df = remove_song_dup_df.merge(spotify_df[['name','id']], how='inner', left_on='Song_Name', right_on='name')
+    music_artist_df = music_artist_df.merge(remove_song_dup_df[['temp_song_ID','id']], how='left', on= 'temp_song_ID')
 
     # Match by Song and artist names
 
