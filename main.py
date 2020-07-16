@@ -1,6 +1,7 @@
 
-#import spotify_data
 import pandas as pd
+import re
+
 
 #clean spotify database
 def clean_spotify_data(): 
@@ -15,16 +16,13 @@ spotify_df=clean_spotify_data()
 
 # merging the 2 data sources and doing the analysis
 
-# billboard: read, remove nulls, convert data types
+# billboard: read, remove nulls, drop duplication, convert data types
 billboard_df = pd.read_csv('Billboard/billboards.csv')
 billboard_df.dropna(inplace=True)       #print(billboard_df.isnull().sum())
-
-### LIMPAR OS DUPLICADOS !!!!
-print(billboard_df)
 billboard_df.drop_duplicates(['Top','Song_Name','Artist_Name','Date'],inplace=True)
-print(billboard_df)
-
-billboard_df['Top'] = billboard_df['Top'].astype(int)       #print(billboard_df.dtypes)
+billboard_df['Top'] = billboard_df['Top'].astype(int)       
+billboard_df['Artist_Name'] = billboard_df['Artist_Name'].astype(str)
+print(billboard_df.dtypes)
 
 # create a table with song_name and artist_name, drop_duplicates, create a temporary_id for each song
 music_artist_df = billboard_df[['Song_Name','Artist_Name']].drop_duplicates()
@@ -43,7 +41,9 @@ billboard_df['Year'] = billboard_df['Date'].apply(lambda dt : dt[0:4])
 yearly_scores = billboard_df.groupby(['Year','temp_song_ID','Song_Name','Artist_Name'])['Popularity_Score'].sum()
 
 
+rules = '[&(feat.*)]'
+#artistas = re.match(rules, music_artist_df['Artist_Name'].astype(str))
 
-#print(yearly_scores)
+print(artistas)
 
 # try to match song names and song_IDs
