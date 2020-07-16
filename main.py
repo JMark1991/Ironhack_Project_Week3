@@ -2,6 +2,17 @@
 #import spotify_data
 import pandas as pd
 
+#clean spotify database
+def clean_spotify_data(): 
+    spotify_df= pd.read_csv("Spotify/data.csv")
+    spotify_df["year"] = pd.to_numeric(spotify_df["year"])
+    condition = spotify_df["year"] >= 1960
+    spotify_df = spotify_df[condition]
+    spotify_df["year"] = spotify_df["year"].astype(int)
+    return spotify_df
+
+spotify_df=clean_spotify_data()
+
 # merging the 2 data sources and doing the analysis
 
 # billboard: read, remove nulls, convert data types
