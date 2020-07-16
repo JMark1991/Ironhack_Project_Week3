@@ -52,8 +52,8 @@ def find_spotify_id(music_artist_df,spotify_df):
     
     #print('music_artist_df: \n',music_artist_df)
     
-    return music_artist_df
-
+    return music_artist_df, temp_spot_df
+    
 
 
 # read and clean spotify data
@@ -76,7 +76,7 @@ music_artist_df['temp_song_ID'] = range(0,len(music_artist_df))
 billboard_df = billboard_df.merge(music_artist_df,how='left',on=['Song_Name','Artist_Name'])
 
 # Update the music_artist_df with the spotify song ids
-music_artist_df = find_spotify_id(music_artist_df,spotify_df)
+music_artist_df, spotify_artist_df = find_spotify_id(music_artist_df,spotify_df)
 
 
 # create a Popularity_score based on the positions on the top
@@ -144,7 +144,9 @@ decade_scores = billboard_df.groupby(['Decade','temp_song_ID','Song_Name','Artis
 # try to match song names and song_IDs
 
 
+#answer question : whats the frequency of an artist on the billboard
 
+count_names = spotify_df.groupby(['year','artists','name']).count()
 
 
     
