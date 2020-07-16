@@ -7,6 +7,8 @@ import pandas as pd
 
 
 #create DataFrame and print head
+def clean_spotify_data(): 
+    
 
 spotify_df= pd.read_csv("Spotify/data.csv")
 print(spotify_df.dtypes)
@@ -29,4 +31,5 @@ spotify_df["year"] = spotify_df["year"].astype(int)
 
 #confirm the column is in dtype int64
 print(spotify_df["year"].head())
+
 
