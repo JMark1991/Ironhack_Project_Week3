@@ -20,9 +20,7 @@ spotify_df=clean_spotify_data()
 billboard_df = pd.read_csv('Billboard/billboards.csv')
 billboard_df.dropna(inplace=True)       #print(billboard_df.isnull().sum())
 billboard_df.drop_duplicates(['Top','Song_Name','Artist_Name','Date'],inplace=True)
-billboard_df['Top'] = billboard_df['Top'].astype(int)       
-billboard_df['Artist_Name'] = billboard_df['Artist_Name'].astype(str)
-print(billboard_df.dtypes)
+billboard_df['Top'] = billboard_df['Top'].astype(int)       #print(billboard_df.dtypes)
 
 # create a table with song_name and artist_name, drop_duplicates, create a temporary_id for each song
 music_artist_df = billboard_df[['Song_Name','Artist_Name']].drop_duplicates()
@@ -40,25 +38,34 @@ billboard_df['Year'] = billboard_df['Date'].apply(lambda dt : dt[0:4])
 # group by year and song to get the popularity scores per year
 yearly_scores = billboard_df.groupby(['Year','temp_song_ID','Song_Name','Artist_Name'])['Popularity_Score'].sum()
 
+# split the artists by: & , feat 
+rules = '\s*&\s*|\s+[Ff]eat.*\s+'
+music_artist_df['Artist_List'] = music_artist_df['Artist_Name'].str.split(rules)
 
-rules = '[&(feat.*)]'
-#artistas = re.match(rules, music_artist_df['Artist_Name'].astype(str))
-
-print(artistas)
 
 # try to match song names and song_IDs
 
-#drop duplicates based on song names only:
-remove_song_dup_df = music_artist_df['Song_Name'].drop_duplicates()
-len(remove_song_dup_df)
-len(music_artist_df)
 
 def find_spotify_id(music_artist_df,spotify_df):
+    # Match song names not duplicated
     remove_song_dup_df = music_artist_df.drop_duplicates(['Song_Name'])
     remove_song_dup_df= remove_song_dup_df.merge(spotify_df[['name','id']], how='inner', left_on='Song_Name', right_on='name')
-    print(len(remove_song_dup_df))
     music_artist_df= music_artist_df.merge(remove_song_dup_df[['temp_song_ID','id']], how='left', on= 'temp_song_ID')
-    #print(music_artist_df.dtypes)
+
+    # Match by Song and artist names
+
+
+    # Match the song and the first artist
+
+
+
+    # Check the remaining spotify_id NaNs 
+
+
+
+    print('music_artist_df correct ids: ',len(music_artist_df) - music_artist_df['id'].isnull().sum())
+    print('music_artist_df nulls: ',music_artist_df['id'].isnull().sum())
+
     
     
     
