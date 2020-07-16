@@ -47,3 +47,26 @@ yearly_scores = billboard_df.groupby(['Year','temp_song_ID','Song_Name','Artist_
 #print(yearly_scores)
 
 # try to match song names and song_IDs
+
+#drop duplicates based on song names only:
+remove_song_dup_df = music_artist_df['Song_Name'].drop_duplicates()
+len(remove_song_dup_df)
+len(music_artist_df)
+
+def find_spotify_id(music_artist_df,spotify_df):
+    remove_song_dup_df = music_artist_df.drop_duplicates(['Song_Name'])
+    remove_song_dup_df= remove_song_dup_df.merge(spotify_df[['name','id']], how='inner', left_on='Song_Name', right_on='name')
+    print(len(remove_song_dup_df))
+    music_artist_df= music_artist_df.merge(remove_song_dup_df[['temp_song_ID','id']], how='left', on= 'temp_song_ID')
+    #print(music_artist_df.dtypes)
+    
+    
+    
+find_spotify_id(music_artist_df,spotify_df)
+
+
+
+
+
+    
+    
