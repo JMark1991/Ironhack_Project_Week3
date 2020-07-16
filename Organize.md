@@ -17,11 +17,16 @@ Spotify Data:
 Billboard Data:
     Webscrape the data and save it to a file (may require several times) - done
     Read from file - done
-    Clean if needed
-    Aggregate the data by year (maybe by decade)
-    Return a DataFrame
+    Clean if needed - done
+    Aggregate the data by year (maybe by decade) - in progress
+    Return a DataFrame - in progress
+
+Song_id:
+    Find the spotify ids of each music in the billboards
+    Replace the temporary_id with the spotify_id 
 
 Merge the 2 dataframes
+
 Graph out the different variables over time
 Take conclusions
 Make presentation
