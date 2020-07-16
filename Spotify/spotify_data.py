@@ -7,7 +7,7 @@ import pandas as pd
 
 
 #create DataFrame and print head
-def clean_spotify_data(): 
+#def clean_spotify_data(): 
     
 
 spotify_df= pd.read_csv("Spotify/data.csv")
@@ -33,3 +33,4 @@ spotify_df["year"] = spotify_df["year"].astype(int)
 print(spotify_df["year"].head())
 
 
+print(spotify_df['artists'])

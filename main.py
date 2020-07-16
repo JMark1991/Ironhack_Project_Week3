@@ -42,6 +42,10 @@ yearly_scores = billboard_df.groupby(['Year','temp_song_ID','Song_Name','Artist_
 rules = '\s*&\s*|\s+[Ff]eat.*\s+'
 music_artist_df['Artist_List'] = music_artist_df['Artist_Name'].str.split(rules)
 
+#Obt
+billboard_df['Year'] = billboard_df['Date'].apply(lambda dt : dt[0:4])
+
+
 
 # try to match song names and song_IDs
 
@@ -53,6 +57,7 @@ def find_spotify_id(music_artist_df,spotify_df):
     music_artist_df = music_artist_df.merge(remove_song_dup_df[['temp_song_ID','id']], how='left', on= 'temp_song_ID')
 
     # Match by Song and artist names
+  
 
 
     # Match the song and the first artist
@@ -63,17 +68,17 @@ def find_spotify_id(music_artist_df,spotify_df):
 
 
 
-    print('music_artist_df correct ids: ',len(music_artist_df) - music_artist_df['id'].isnull().sum())
-    print('music_artist_df nulls: ',music_artist_df['id'].isnull().sum())
-
+    #print('music_artist_df correct ids: ',len(music_artist_df) - music_artist_df['id'].isnull().sum())
+    #print('music_artist_df nulls: ',music_artist_df['id'].isnull().sum())
+    
     
     
     
 find_spotify_id(music_artist_df,spotify_df)
 
+#Create a temporary table that has null id
 
-
-
+#print(spotify_df['artists'])
 
     
     
