@@ -9,7 +9,7 @@ import pandas as pd
 #create DataFrame and print head
 
 spotify_df= pd.read_csv("Spotify/data.csv")
-print(spotify_df.head())
+print(spotify_df.dtypes)
 
 #Transform the dtype of the column year to numeric so I can apply condition in sliccing
 
