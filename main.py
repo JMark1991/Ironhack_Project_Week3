@@ -7,6 +7,12 @@ import pandas as pd
 # billboard: read, remove nulls, convert data types
 billboard_df = pd.read_csv('Billboard/billboards.csv')
 billboard_df.dropna(inplace=True)       #print(billboard_df.isnull().sum())
+
+### LIMPAR OS DUPLICADOS !!!!
+print(billboard_df)
+billboard_df.drop_duplicates(['Top','Song_Name','Artist_Name','Date'],inplace=True)
+print(billboard_df)
+
 billboard_df['Top'] = billboard_df['Top'].astype(int)       #print(billboard_df.dtypes)
 
 # create a table with song_name and artist_name, drop_duplicates, create a temporary_id for each song
@@ -27,6 +33,6 @@ yearly_scores = billboard_df.groupby(['Year','temp_song_ID','Song_Name','Artist_
 
 
 
-print(yearly_scores)
+#print(yearly_scores)
 
 # try to match song names and song_IDs
