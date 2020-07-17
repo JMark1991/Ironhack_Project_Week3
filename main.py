@@ -115,24 +115,40 @@ def wavg(group, avg_name, weight_name):
         return d.mean()
 
 
+ultimate_df['Primary_Artist'].value_counts().head(1000).to_csv('artist_tops.csv')
 # Weighted averages per year of the variables: missing 'acousticness', 
 weighted_avg = pd.DataFrame()
+top_artists = pd.DataFrame()
 #max_val = pd.DataFrame()
 #min_val = pd.DataFrame()
 important_variables = ['acousticness','danceability', 'energy', 'valence', 'explicit']
 #variables = ['acousticness','danceability', 'energy', 'instrumentalness', 'liveness', 'loudness', 'popularity', 'speechiness', 'tempo', 'valence','explicit']
 for variable in important_variables:
-    weighted_avg[variable] = ultimate_df.groupby('Year').apply(wavg, variable, 'Popularity_Score') 
+    weighted_avg[variable] = ultimate_df.groupby('Year').apply(wavg, variable, 'Popularity_Score')
+    top_artists[variable] = ultimate_df.groupby(['Decade','Primary_Artist']).apply(wavg, variable, 'Popularity_Score')
     #max_val[variable] = ultimate_df.groupby('Decade')[variable].max()
     #min_val[variable] = ultimate_df.groupby('Decade')[variable].min()
 
-print(weighted_avg)
-#print(max_val)
-#print(min_val)
+weighted_avg.index = weighted_avg.index.astype(int)
+#print(top_artists.sort_values(['explicit'], ascending=False).head(50))
 
-sns.set()
+'''
+# line plot of the variables
+sns.set_style('darkgrid')
+f = plt.figure(figsize=(20,20))
 ax = sns.lineplot(data=weighted_avg)
+plt.rcParams['axes.grid'] = True
+plt.rcParams['savefig.transparent'] = True
+
 plt.show()
+'''
+
+'''
+# pair plot of the variables
+ax = sns.pairplot(data=weighted_avg)
+plt.show()
+'''
+
 
 # group by year and song to get the popularity scores per year
 yearly_scores = billboard_df.groupby(['Year','temp_song_ID','Song_Name','Artist_Name'])['Popularity_Score'].sum()
