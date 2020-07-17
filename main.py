@@ -183,8 +183,14 @@ condition2= answer_df['Number of Songs on Spotify'] >= 10
 answer_dff= answer_df[condition2]
 
 #make a scatter plot with answer_dff
-graph_eff = sns.scatterplot(x="Number of Songs on Spotify",y="Number of Songs on Billboard", hue='Artist Efficiency', size= 'Artist Efficiency', data=answer_dff, legend="foals")
+sns.set_style('darkgrid')
+
+f = plt.figure(figsize=(20,20))
+graph_eff = sns.scatterplot(x="Number of Songs on Spotify",y="Number of Songs on Billboard", hue='Artist Efficiency', size= 'Artist Efficiency', data=answer_dff, legend="false")
+plt.rcParams['axes.grid'] = True
+plt.rcParams['savefig.transparent'] = True
 plt.show()
+
 
 
 
