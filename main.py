@@ -3,6 +3,8 @@ import pandas as pd
 import re
 import seaborn as sns
 import matplotlib.pyplot as plt
+import numpy as np
+import matplotlib.ticker as ticker
 
 
 def clean_spotify_data(): 
@@ -130,18 +132,19 @@ for variable in important_variables:
 weighted_avg.index = weighted_avg.index.astype(int)
 #print(top_artists.sort_values(['explicit'], ascending=False).head(50))
 
-
+'''
+# line plot of the variables
 sns.set_style('darkgrid')
 f = plt.figure(figsize=(20,20))
 ax = sns.lineplot(data=weighted_avg)
 plt.rcParams['axes.grid'] = True
 plt.rcParams['savefig.transparent'] = True
 
-plt.rcParams('axes', linewidth=2)
-plt.rcParams('font', weight='bold')
 plt.show()
 '''
-#sns.set()
+
+'''
+# pair plot of the variables
 ax = sns.pairplot(data=weighted_avg)
 plt.show()
 '''
@@ -155,13 +158,37 @@ decade_scores = billboard_df.groupby(['Decade','temp_song_ID','Song_Name','Artis
 #decade_tops = billboard_df.groupby(['Decade','temp_song_ID','Song_Name','Artist_Name']).apply(lambda x: x.nlargest(5,['Popularity_Score'])).reset_index(drop=True)
 
 
-# try to match song names and song_IDs
 
 
-#answer question : whats the frequency of an artist on the billboard
+#answer question : whats the artist efficiency?
+#Make series with primary artist and count of songs in billboard and spotify, respectively
+count_songs_bill = music_artist_df.groupby(['Primary_Artist'])['Song_Name'].count()
+count_songs_spoty = spotify_artist_df.groupby(['primary_artist'])['name'].count()
 
-count_names = spotify_df.groupby(['year','artists','name']).count()
+#create a new DataFrame 
+answer_df = pd.DataFrame(count_songs_bill)
+#add the second series as a column
+answer_df['count_spot']= count_songs_spoty
+#Drop the nulls
+answer_df.dropna(inplace=True)  
+#rename columns
+answer_df = answer_df.rename(columns={"Song_Name": "Number of Songs on Billboard", "count_spot": "Number of Songs on Spotify"})
+#add new column with the division of the other two columns
+answer_df['Artist Efficiency']= answer_df['Number of Songs on Billboard']/answer_df['Number of Songs on Spotify']
+
+#apply conditions so that the artist efficiency is not more than 1 and the minimun number of songs on spotify is 10
+condition = answer_df['Artist Efficiency'] < 1
+answer_df = answer_df[condition]
+condition2= answer_df['Number of Songs on Spotify'] >= 10
+answer_dff= answer_df[condition2]
+
+#make a scatter plot with answer_dff
+graph_eff = sns.scatterplot(x="Number of Songs on Spotify",y="Number of Songs on Billboard", hue='Artist Efficiency', size= 'Artist Efficiency', data=answer_dff, legend="foals")
+plt.show()
 
 
-    
-    
+
+
+
+
+
